@@ -1,0 +1,59 @@
+{% extends "Base/layout.html" %}
+{% load static %}
+
+{% block content %}
+<main>
+    <section id="form_container">
+        <img id="logo" src="{% static 'images/chat.png' %}">
+
+        <div id="welcome">
+
+
+        <h1>Welcome to Chat App</h1>
+        <p>Join us now</p>
+        </div>
+
+        <form id="join">
+            <div class="join-field">
+                <input type="text" name="room" placeholder="Enter Room Name" style="text-transform: uppercase;">
+            </div>
+            <div class="join-field">
+                <input type="text" name="username" placeholder="Enter Your name" style="text-transform: uppercase;">
+            </div>
+            <div class="join-field">
+                <input type="submit" value="Join Stream">
+            </div>
+        </form>
+
+    </section>    
+</main>
+
+<script type="text/javascript">
+    let join = document.getElementById("join");
+
+    let handlejoin = async(e) => {
+        e.preventDefault()
+        let room= e.target.room.value.toUpperCase()
+        let name= e.target.username.value
+        
+        let response = await fetch(`/token/?channel=${room}`)
+        let data = await response.json()
+        let uid = data.uid
+        let token = data.token
+       
+        sessionStorage.setItem('uid', uid)
+        sessionStorage.setItem('token', token)
+        sessionStorage.setItem('room', room)
+        sessionStorage.setItem('name', name)
+
+        window.open('/room/', '_self')
+    }
+
+    join.addEventListener('submit',handlejoin)
+
+</script>
+
+
+
+
+{% endblock content %}
